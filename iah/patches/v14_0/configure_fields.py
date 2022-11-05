@@ -8,24 +8,47 @@ def execute():
 def _make_property_setters():
     fixtures = {
         "Patient Appointment": [
-            ("therapy_plan", "hidden", 1),
-            ("therapy_type", "label", "Therapy Type"),
-            ("therapy_type", "depends_on", "eval:doc.patient;"),
+            {
+                "fieldname": "therapy_plan",
+                "property": "hidden",
+                "property_type": "Check",
+                "value": 1,
+            },
+            {
+                "fieldname": "therapy_type",
+                "property": "label",
+                "property_type": "Data",
+                "value": "Therapy Type",
+            },
+            {
+                "fieldname": "therapy_type",
+                "property": "depends_on",
+                "property_type": "Data",
+                "value": "eval:doc.patient;",
+            },
         ],
         "Therapy Session": [
-            ("therapy_plan", "reqd", 0),
-            ("therapy_plan", "hidden", 0),
-            ("therapy_type", "depends_on", ""),
+            {
+                "fieldname": "therapy_plan",
+                "property": "reqd",
+                "property_type": "Check",
+                "value": 0,
+            },
+            {
+                "fieldname": "therapy_plan",
+                "property": "hidden",
+                "property_type": "Check",
+                "value": 1,
+            },
+            {
+                "fieldname": "therapy_type",
+                "property": "depends_on",
+                "property_type": "Data",
+                "value": "",
+            },
         ],
     }
     for doctype, docfields in fixtures.items():
-        for fieldname, property, value in docfields:
-            frappe.make_property_setter(
-                {
-                    "doctype": doctype,
-                    "doctype_or_field": "DocField",
-                    "fieldname": fieldname,
-                    "property": property,
-                    "value": value,
-                }
-            )
+        for kwargs in docfields:
+            args = {"doctype": doctype, "doctype_or_field": "DocField", **kwargs}
+            frappe.make_property_setter(args)
