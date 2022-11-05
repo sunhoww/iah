@@ -105,7 +105,7 @@ override_doctype_class = {
 
 doc_events = {
     "Asset": {
-        "before_insert": "iah.overrides.asset.before_insert",
+        "before_insert": "iah.doc_events.asset.before_insert",
     }
 }
 
