@@ -97,6 +97,7 @@ app_license = "MIT"
 override_doctype_class = {
     "Asset": "iah.overrides.asset.Asset",
     "Patient Appointment": "iah.overrides.patient_appointment.PatientAppointment",
+    "Therapy Session": "iah.overrides.therapy_session.TherapySession",
 }
 
 # Document Events
