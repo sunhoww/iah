@@ -104,9 +104,8 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
-    "Asset": {
-        "before_insert": "iah.doc_events.asset.before_insert",
-    }
+    "Asset": { "before_insert": "iah.doc_events.asset.before_insert" },
+    "Patient Appointment": { "before_save": "iah.doc_events.patient_appointment.before_save" },
 }
 
 # Scheduled Tasks
