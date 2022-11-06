@@ -1,1 +1,2 @@
-iah.patches.v14_0.configure_fields
+iah.patches.v14_0.setup_patient_appointment
+iah.patches.v14_0.setup_therapy_session
