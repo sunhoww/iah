@@ -29,7 +29,9 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Patient Appointment": "public/js/client_script/patient_appointment.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -105,8 +107,10 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
-    "Asset": { "before_insert": "iah.doc_events.asset.before_insert" },
-    "Patient Appointment": { "before_save": "iah.doc_events.patient_appointment.before_save" },
+    "Asset": {"before_insert": "iah.doc_events.asset.before_insert"},
+    "Patient Appointment": {
+        "before_save": "iah.doc_events.patient_appointment.before_save"
+    },
 }
 
 # Scheduled Tasks
