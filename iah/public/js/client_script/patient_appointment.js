@@ -4,7 +4,7 @@ frappe.ui.form.on('Patient Appointment', {
       filters: { medical_department: department },
     }));
     frm.set_query('ref_patient_appointment', () => ({
-      filters: { therapy_type: ['is', 'set'] },
+      filters: { appointment_type: ['is', 'set'] },
     }));
   },
   refresh: function (frm) {
