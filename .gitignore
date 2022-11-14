@@ -4,4 +4,11 @@
 *.swp
 tags
 iah/docs/current
+
+__pycache__
+.env
+
+# Bench runtime
 node_modules/
+iah/public/node_modules
+iah/public/dist
