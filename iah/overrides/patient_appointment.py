@@ -1,10 +1,9 @@
 import frappe
 from healthcare.healthcare.doctype.patient_appointment.patient_appointment import (
     PatientAppointment as Standard,
-    invoice_appointment,
 )
 from healthcare.healthcare.doctype.healthcare_settings.healthcare_settings import (
-    get_income_account,
+    get_appointment_item,
     get_receivable_account,
 )
 
@@ -46,6 +45,8 @@ def _invoice_appointment(appointment_doc):
         "Patient", appointment_doc.patient, "customer"
     )
     sales_invoice.appointment = appointment_doc.name
+    sales_invoice.set_posting_time = 1
+    sales_invoice.posting_date = appointment_doc.appointment_date
     sales_invoice.due_date = frappe.utils.getdate()
     sales_invoice.company = appointment_doc.company
     sales_invoice.debit_to = get_receivable_account(appointment_doc.company)
