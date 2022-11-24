@@ -30,43 +30,14 @@ class PatientAppointment(Standard):
         # send_confirmation_msg(self)
 
     def set_payment_details(self):
-        if self.appointment_type:
-            super().set_payment_details()
+        if not self.appointment_type:
             return
 
-        # assuming self.therapy_type is always set when self.appointment_type is not
-        if frappe.db.get_single_value(
-            "Healthcare Settings", "automate_appointment_invoicing"
-        ):
-            therapy_type = frappe.get_cached_value(
-                "Therapy Type",
-                self.therapy_type,
-                fieldname=["item", "rate", "is_billable"],
-                as_dict=True,
-            )
-            if not therapy_type:
-                frappe.throw(f"Unknown <em>Therapy Type</em>: {self.therapy_type}")
-
-            if therapy_type.is_billable:
-                self.db_set("billing_item", therapy_type.item)
-                self.db_set("paid_amount", therapy_type.rate)
+        super().set_payment_details()
 
 
 def _invoice_appointment(appointment_doc):
-    if appointment_doc.appointment_type:
-        invoice_appointment(appointment_doc)
-        return
-
-    therapy_type = frappe.get_cached_value(
-        "Therapy Type",
-        appointment_doc.therapy_type,
-        fieldname=["item", "rate", "is_billable"],
-        as_dict=True,
-    )
-    if not therapy_type:
-        frappe.throw(f"Unknown <em>Therapy Type</em>: {appointment_doc.therapy_type}")
-
-    if not therapy_type.is_billable:
+    if not appointment_doc.appointment_type:
         return
 
     sales_invoice = frappe.new_doc("Sales Invoice")
@@ -79,24 +50,8 @@ def _invoice_appointment(appointment_doc):
     sales_invoice.company = appointment_doc.company
     sales_invoice.debit_to = get_receivable_account(appointment_doc.company)
 
-    charge = appointment_doc.paid_amount or therapy_type.rate
-    sales_invoice.append(
-        "items",
-        {
-            "item_code": therapy_type.item,
-            "income_account": get_income_account(
-                appointment_doc.practitioner, appointment_doc.company
-            ),
-            "cost_center": frappe.get_cached_value(
-                "Company", appointment_doc.company, "cost_center"
-            ),
-            "rate": charge,
-            "amount": charge,
-            "qty": 1,
-            "reference_dt": "Patient Appointment",
-            "reference_dn": appointment_doc.name,
-        },
-    )
+    item = sales_invoice.append("items", {})
+    item = get_appointment_item(appointment_doc, item)
 
     # Add payments if payment details are supplied else proceed to create invoice as Unpaid
     if appointment_doc.mode_of_payment and appointment_doc.paid_amount:
@@ -113,5 +68,8 @@ def _invoice_appointment(appointment_doc):
     frappe.db.set_value(
         "Patient Appointment",
         appointment_doc.name,
-        {"invoiced": 1, "ref_sales_invoice": sales_invoice.name},
+        {
+            "invoiced": 1,
+            "ref_sales_invoice": sales_invoice.name,
+        },
     )
