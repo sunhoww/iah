@@ -1,9 +1,9 @@
 import frappe
 from healthcare.healthcare.doctype.patient_appointment.patient_appointment import (
     PatientAppointment as Standard,
+    get_appointment_item,
 )
 from healthcare.healthcare.doctype.healthcare_settings.healthcare_settings import (
-    get_appointment_item,
     get_receivable_account,
 )
 
