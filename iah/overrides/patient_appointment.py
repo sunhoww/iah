@@ -27,6 +27,7 @@ class PatientAppointment(Standard):
         if self.appointment_type:
             self.update_fee_validity()
         # send_confirmation_msg(self)
+        # self.insert_calendar_event()
 
     def set_payment_details(self):
         if not self.appointment_type:
