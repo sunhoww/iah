@@ -1,6 +1,5 @@
 {
   "name": "iah",
-  "packageManager": "yarn@3.2.4",
   "version": "14.4.0",
   "description": "Customizations for IAH",
   "scripts": {
