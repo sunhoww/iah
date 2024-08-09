@@ -1,6 +1,6 @@
 {
   "name": "iah",
-  "version": "14.4.0",
+  "version": "14.4.1",
   "description": "Customizations for IAH",
   "scripts": {
     "version": "sed -i \"s/__version__.*/__version__ = \\\"$npm_package_version\\\"/\" $npm_package_name/__init__.py; sed -i \"s/__version__ = '.*';/__version__ = '$npm_package_version';/\" $npm_package_name/public/js/version.js; git add -A .",
