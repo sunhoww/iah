@@ -2,6 +2,7 @@ import frappe
 from healthcare.healthcare.doctype.patient_appointment.patient_appointment import (
     PatientAppointment as Standard,
     get_appointment_item,
+    get_appointment_billing_item_and_rate,
 )
 from healthcare.healthcare.doctype.healthcare_settings.healthcare_settings import (
     get_receivable_account,
@@ -24,14 +25,17 @@ class PatientAppointment(Standard):
         # self.update_prescription_details()
         self.set_payment_details()
         _invoice_appointment(self)
-        if self.appointment_type:
-            self.update_fee_validity()
         # send_confirmation_msg(self)
         # self.insert_calendar_event()
 
     def set_payment_details(self):
         if not self.appointment_type:
             return
+
+        details = get_appointment_billing_item_and_rate(self)
+        self.db_set("billing_item", details.get("service_item"))
+        if not self.paid_amount:
+            self.db_set("paid_amount", details.get("practitioner_charge"))
 
         super().set_payment_details()
 
@@ -75,3 +79,4 @@ def _invoice_appointment(appointment_doc):
             "ref_sales_invoice": sales_invoice.name,
         },
     )
+    appointment_doc.notify_update()
